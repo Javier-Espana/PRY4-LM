@@ -1,0 +1,19 @@
+# Dependencias del Sistema de Control Difuso para Riego de Invernadero
+# Python 3.8+
+
+# Librería principal de lógica difusa
+scikit-fuzzy>=0.4.2
+
+# Computación numérica
+numpy>=1.21.0
+scipy>=1.7.0
+
+# Visualización y gráficas
+matplotlib>=3.5.0
+
+# Análisis de grafos (requerido por scikit-fuzzy)
+networkx>=2.6.0
+
+# Opcional: Jupyter para notebooks interactivos
+# jupyter>=1.0.0
+# ipykernel>=6.0.0
