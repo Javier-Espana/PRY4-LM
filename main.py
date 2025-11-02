@@ -111,7 +111,7 @@ def execute_simulations(system, samples, logger, show_details=True):
             results.append(result)
             
         except Exception as e:
-            print(f"  └─ ❌ Error: {str(e)}")
+            print(f"  └─ Error: {str(e)}")
     
     print("\n" + "="*70)
     print(f"✓ Simulaciones completadas: {len(results)}/{len(samples)}")
@@ -125,7 +125,7 @@ def main():
     
     print_header()
     
-    print("⏳ Inicializando sistema de control difuso...")
+    print("Inicializando sistema de control difuso...")
     
     # 1. Definir universos de discurso
     print("  [1/5] Definiendo universos de variables...")
@@ -148,7 +148,7 @@ def main():
     logger = DataLogger(log_dir='logs')
     logger.start_session('riego_invernadero')
     
-    print("\n✅ Sistema inicializado correctamente")
+    print("\nSistema inicializado correctamente")
     
     # Bucle principal del menú
     while True:
@@ -159,7 +159,7 @@ def main():
             
             if opcion == '0':
                 # Salir
-                print("\n📊 Guardando resumen de la sesión...")
+                print("\nGuardando resumen de la sesión...")
                 logger.save_summary({
                     'descripcion': 'Sistema de Control Difuso para Riego de Invernadero',
                     'variables_entrada': ['Humedad del suelo', 'Temperatura', 'Radiación solar'],
@@ -167,7 +167,7 @@ def main():
                     'tipo_sistema': 'Mamdani',
                     'num_reglas': len(rules)
                 })
-                print("\n👋 Gracias por usar el sistema. ¡Hasta pronto!")
+                print("\nGracias por usar el sistema. ¡Hasta pronto!")
                 break
             
             elif opcion == '1':
@@ -202,12 +202,12 @@ def main():
             
             elif opcion == '4':
                 # Visualizar funciones de pertenencia
-                print("\n📊 Generando gráficas de funciones de pertenencia...")
+                print("\nGenerando gráficas de funciones de pertenencia...")
                 plot_memberships(vars, save_path='logs/funciones_pertenencia.png')
             
             elif opcion == '5':
                 # Superficie 3D
-                print("\n📊 Seleccione las variables para la superficie 3D:")
+                print("\nSeleccione las variables para la superficie 3D:")
                 print("1. Humedad vs Temperatura (Radiación fija)")
                 print("2. Humedad vs Radiación (Temperatura fija)")
                 print("3. Temperatura vs Radiación (Humedad fija)")
@@ -230,7 +230,7 @@ def main():
                                'soil_moisture', hum_fija,
                                save_path='logs/superficie_temp_rad.png')
                 else:
-                    print("❌ Opción no válida")
+                    print("Opción no válida")
             
             elif opcion == '6':
                 # Visualizar simulación específica
@@ -238,7 +238,7 @@ def main():
                 if sample:
                     duracion = simulate_irrigation(system, sample['humedad'],
                                                   sample['temperatura'], sample['radiacion'])
-                    print(f"\n✅ Duración calculada: {duracion:.2f} minutos")
+                    print(f"\nDuración calculada: {duracion:.2f} minutos")
                     plot_simulation_result(system, sample, duracion, vars)
             
             elif opcion == '7':
@@ -264,15 +264,15 @@ def main():
                 logger.print_summary()
             
             else:
-                print("\n❌ Opción no válida. Por favor, seleccione un número del 0 al 8.")
+                print("\nOpción no válida. Por favor, seleccione un número del 0 al 8.")
         
         except KeyboardInterrupt:
-            print("\n\n⚠️  Proceso interrumpido por el usuario.")
-            print("📊 Guardando resumen...")
+            print("\n\nProceso interrumpido por el usuario.")
+            print("Guardando resumen...")
             logger.save_summary()
             break
         except Exception as e:
-            print(f"\n❌ Error inesperado: {str(e)}")
+            print(f"\nError inesperado: {str(e)}")
             print("Por favor, intente de nuevo.")
 
 
@@ -280,6 +280,6 @@ if __name__ == '__main__':
     try:
         main()
     except Exception as e:
-        print(f"\n❌ Error crítico: {str(e)}")
+        print(f"\nError crítico: {str(e)}")
         print("El programa se cerrará.")
         sys.exit(1)

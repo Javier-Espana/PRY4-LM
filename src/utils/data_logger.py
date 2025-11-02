@@ -73,7 +73,7 @@ class DataLogger:
             notes (str, optional): Notas adicionales sobre la simulación
         """
         if not self.session_id:
-            print("⚠️  Advertencia: No hay sesión activa. Iniciando sesión automática...")
+            print("Advertencia: No hay sesión activa. Iniciando sesión automática...")
             self.start_session()
         
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -115,7 +115,7 @@ class DataLogger:
             additional_info (dict, optional): Información adicional a incluir
         """
         if not self.session_id:
-            print("⚠️  No hay sesión activa para guardar.")
+            print("No hay sesión activa para guardar.")
             return
         
         # Calcular estadísticas
@@ -163,7 +163,7 @@ class DataLogger:
         Imprime un resumen de la sesión actual en consola.
         """
         if not self.results:
-            print("\n⚠️  No hay resultados registrados.")
+            print("\nNo hay resultados registrados.")
             return
         
         print("\n" + "="*70)
@@ -206,10 +206,10 @@ def load_session(json_file):
         print(f"✓ Sesión cargada: {data['session_id']}")
         return data
     except FileNotFoundError:
-        print(f"❌ Error: No se encontró el archivo {json_file}")
+        print(f"Error: No se encontró el archivo {json_file}")
         return None
     except json.JSONDecodeError:
-        print(f"❌ Error: El archivo {json_file} no es un JSON válido")
+        print(f"Error: El archivo {json_file} no es un JSON válido")
         return None
 
 
@@ -231,7 +231,7 @@ def compare_sessions(json_files):
             sessions.append(data)
     
     if not sessions:
-        print("❌ No se pudieron cargar sesiones para comparar.")
+        print("No se pudieron cargar sesiones para comparar.")
         return None
     
     print("\n" + "="*70)

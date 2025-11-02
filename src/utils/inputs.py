@@ -127,13 +127,13 @@ def get_custom_input():
                     'radiacion': radiacion
                 }
             else:
-                print(f"\n❌ Error: {mensaje}")
+                print(f"\nError: {mensaje}")
                 print("Por favor, ingrese valores dentro de los rangos válidos.\n")
                 
         except ValueError:
             print("\n❌ Error: Debe ingresar valores numéricos válidos.\n")
         except KeyboardInterrupt:
-            print("\n\n⚠️  Entrada cancelada por el usuario.")
+            print("\n\nEntrada cancelada por el usuario.")
             return None
 
 
