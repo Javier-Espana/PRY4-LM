@@ -219,54 +219,93 @@ def plot_simulation_result(system, input_values, output_value, vars):
     fig.suptitle(f'Resultado de Simulación - Duración: {output_value:.2f} min',
                  fontsize=14, fontweight='bold')
     
-    # Humedad del suelo
+    # Humedad del suelo (mostrar grado de activación de cada término)
     ax = axes[0, 0]
     sm = vars['soil_moisture']
+    hum_val = input_values.get('humedad', input_values.get('soil_moisture', 0))
+
     for term in sm.terms:
-        ax.plot(sm.universe, sm[term].mf, linewidth=2, label=term.replace('_', ' ').title())
-    ax.axvline(input_values['humedad'], color='red', linestyle='--', linewidth=2,
-               label=f"Valor: {input_values['humedad']:.1f}%")
-    ax.fill_between(sm.universe, 0, sm[term].mf, alpha=0.1)
+        mf = sm[term].mf
+        ax.plot(sm.universe, mf, linewidth=2, label=term.replace('_', ' ').title())
+
+        # grado de activación (interpolación de la mf en el valor de entrada)
+        try:
+            degree = float(np.interp(hum_val, sm.universe, mf))
+        except Exception:
+            degree = 0.0
+
+        # sombrear la porción activada (clipping de la mf al grado)
+        ax.fill_between(sm.universe, 0, np.minimum(mf, degree), alpha=0.25)
+
+    ax.axvline(hum_val, color='red', linestyle='--', linewidth=2,
+               label=f"Valor: {hum_val:.1f}%")
     ax.set_title('Humedad del Suelo', fontweight='bold')
     ax.set_xlabel('Humedad (%)')
     ax.set_ylabel('Grado de Pertenencia')
     ax.legend(fontsize=8)
     ax.grid(True, alpha=0.3)
     
-    # Temperatura
+    # Temperatura (mostrar grado de activación)
     ax = axes[0, 1]
     temp = vars['temperature']
+    temp_val = input_values.get('temperatura', input_values.get('temperature', 0))
+
     for term in temp.terms:
-        ax.plot(temp.universe, temp[term].mf, linewidth=2, label=term.replace('_', ' ').title())
-    ax.axvline(input_values['temperatura'], color='red', linestyle='--', linewidth=2,
-               label=f"Valor: {input_values['temperatura']:.1f}°C")
+        mf = temp[term].mf
+        ax.plot(temp.universe, mf, linewidth=2, label=term.replace('_', ' ').title())
+        try:
+            degree = float(np.interp(temp_val, temp.universe, mf))
+        except Exception:
+            degree = 0.0
+        ax.fill_between(temp.universe, 0, np.minimum(mf, degree), alpha=0.25)
+
+    ax.axvline(temp_val, color='red', linestyle='--', linewidth=2,
+               label=f"Valor: {temp_val:.1f}°C")
     ax.set_title('Temperatura', fontweight='bold')
     ax.set_xlabel('Temperatura (°C)')
     ax.set_ylabel('Grado de Pertenencia')
     ax.legend(fontsize=8)
     ax.grid(True, alpha=0.3)
     
-    # Radiación solar
+    # Radiación solar (mostrar grado de activación)
     ax = axes[1, 0]
     rad = vars['solar_radiation']
+    rad_val = input_values.get('radiacion', input_values.get('solar_radiation', 0))
+
     for term in rad.terms:
-        ax.plot(rad.universe, rad[term].mf, linewidth=2, label=term.replace('_', ' ').title())
-    ax.axvline(input_values['radiacion'], color='red', linestyle='--', linewidth=2,
-               label=f"Valor: {input_values['radiacion']:.1f} W/m²")
+        mf = rad[term].mf
+        ax.plot(rad.universe, mf, linewidth=2, label=term.replace('_', ' ').title())
+        try:
+            degree = float(np.interp(rad_val, rad.universe, mf))
+        except Exception:
+            degree = 0.0
+        ax.fill_between(rad.universe, 0, np.minimum(mf, degree), alpha=0.25)
+
+    ax.axvline(rad_val, color='red', linestyle='--', linewidth=2,
+               label=f"Valor: {rad_val:.1f} W/m²")
     ax.set_title('Radiación Solar', fontweight='bold')
     ax.set_xlabel('Radiación (W/m²)')
     ax.set_ylabel('Grado de Pertenencia')
     ax.legend(fontsize=8)
     ax.grid(True, alpha=0.3)
     
-    # Duración (salida)
+    # Duración (salida) — mostrar nivel de pertenencia en el valor defuzzificado
     ax = axes[1, 1]
     duration = vars['irrigation_duration']
+    out_val = output_value
+
     for term in duration.terms:
-        ax.plot(duration.universe, duration[term].mf, linewidth=2,
+        mf = duration[term].mf
+        ax.plot(duration.universe, mf, linewidth=2,
                 label=term.replace('_', ' ').title())
-    ax.axvline(output_value, color='red', linestyle='--', linewidth=3,
-               label=f"Salida: {output_value:.2f} min")
+        try:
+            degree = float(np.interp(out_val, duration.universe, mf))
+        except Exception:
+            degree = 0.0
+        ax.fill_between(duration.universe, 0, np.minimum(mf, degree), alpha=0.25)
+
+    ax.axvline(out_val, color='red', linestyle='--', linewidth=3,
+               label=f"Salida: {out_val:.2f} min")
     ax.set_title('Duración del Riego (Salida)', fontweight='bold')
     ax.set_xlabel('Duración (min)')
     ax.set_ylabel('Grado de Pertenencia')

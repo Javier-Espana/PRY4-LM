@@ -60,11 +60,21 @@ def simulate_irrigation(system, humedad, temperatura, radiacion):
         system.compute()
     except Exception as e:
         raise RuntimeError(f"Error en la inferencia difusa: {str(e)}")
-    
     # Obtener y retornar el valor defuzzificado
-    duration = system.output['irrigation_duration']
-    
-    return duration
+    try:
+        duration = system.output['irrigation_duration']
+    except KeyError:
+        # Si por alguna razón la clave no existe, intentar obtener el primer
+        # valor disponible en system.output y devolverlo (mejor mensaje para el
+        # usuario que un KeyError crudo).
+        try:
+            # system.output es similar a un dict; tomar el primer valor
+            first_val = next(iter(system.output.values()))
+            return float(first_val)
+        except Exception:
+            raise RuntimeError("Salida de inferencia no disponible: 'irrigation_duration' no encontrada")
+
+    return float(duration)
 
 
 def get_system_info(system):
